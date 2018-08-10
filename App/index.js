@@ -66,7 +66,7 @@ function listFiles(auth) {
                 type:"anyone"
             }}, function(err,result){
               if(err) console.log(err) 
-              else console.log(result)
+              else console.log("file is public now")
           });
         }
       });
