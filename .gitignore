@@ -2,3 +2,4 @@
 /App/security/token.json
 /node_modules
 package-lock.json
+/App/node_modules
