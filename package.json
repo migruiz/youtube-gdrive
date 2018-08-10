@@ -1,0 +1,12 @@
+{
+  "name": "temperature-sensor-reading-processor",
+  "version": "0.0.0",
+  "description": "TemperatureSensorReadingProcessor",
+  "main": "app.js",
+  "author": {
+    "name": "miguel"
+  },
+  "dependencies": {
+    "googleapis": "^32.0.0"
+  }
+}
