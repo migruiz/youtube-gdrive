@@ -46,7 +46,7 @@ function listFiles(auth) {
       };
       var media = {
         mimeType: 'audio/mpeg',
-        body: fs.createReadStream('vaca.mp3')
+        body: fs.createReadStream('files/vaca.mp3')
       };
       
       drive.files.create({

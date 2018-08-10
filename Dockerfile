@@ -5,4 +5,18 @@ RUN apk update --repository $EDGE_REPOSITORY \
 	&& apk add ffmpeg --repository $EDGE_REPOSITORY \
 	&& rm -rf /var/cache/apk/*
 RUN pip install youtube-dl
-ENTRYPOINT ["youtube-dl"]
+
+
+RUN mkdir /App/
+COPY App/package.json  /App/package.json
+
+RUN cd /App \
+&& npm  install 
+
+COPY App /App
+
+VOLUME /App/security
+VOLUME /App/files
+
+
+ENTRYPOINT ["sh"]
