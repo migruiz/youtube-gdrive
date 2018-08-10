@@ -1,3 +1,4 @@
 /App/security/credentials.json
 /App/security/token.json
 /node_modules
+package-lock.json
