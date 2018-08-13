@@ -13,9 +13,9 @@ exports.getPlaylistinfoAsync =async function(playlistId){
 
 
 async function getoauthClientAsync() {
-    var clientCredentialsFile=await readFileAsync('App/client_secret.json');
+    var clientCredentialsFile=await readFileAsync('/googleCredentials/youtube/client_secret.json');
     var credentials=JSON.parse(clientCredentialsFile);
-    var tokenFile=await readFileAsync('App/youtube_credentials.json');
+    var tokenFile=await readFileAsync('/googleCredentials/youtube/youtube_credentials.json');
     var token=JSON.parse(tokenFile);
 
     var clientSecret = credentials.installed.client_secret;

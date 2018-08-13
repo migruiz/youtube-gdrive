@@ -55,8 +55,8 @@ function getItemsToDelete(savedItems,currentItems){
       currentItem.bucketFileName=savedItem.bucketFileName;
     }
     else{
-      //var localFile=await youtubedl.downloadVideoAsync(currentItemId);
-      var localFile='./App/vaca.mp3';
+      var localFile=await youtubedl.downloadVideoAsync(currentItemId);
+      //var localFile='./App/vaca.mp3';
       var result= await firebase.uploadFileAsync(localFile);
       currentItem.url=result.downloadurl;
       currentItem.bucketFileName=result.fileName;
