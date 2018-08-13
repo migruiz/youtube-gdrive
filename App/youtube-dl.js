@@ -18,10 +18,12 @@ function execyoutubedlAsync(videourl,outputfile){
 
         var result = '';
         youtubedlProcess.stdout.on('data', (data) => {
+            console.log(data);
             result += data.toString();
         });
         youtubedlProcess.stderr.on('data', (data) => {
-            return reject(err);
+            console.log(data);
+            return reject(data);
         });
         youtubedlProcess.on('exit', function (code, signal) {
             resolve();
