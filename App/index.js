@@ -38,7 +38,9 @@ function getItemsToDownload(savedItems,currentItems){
 
 (async ()=>{
   var playlistId='PLJLM5RvmYjvxaMig-iCqA9ZrB8_gg6a9g';
-  await firebase.uploadFileAsync(playlistId);
+ var result= await firebase.uploadFileAsync('./App/vaca.mp3');
+ console.log(result);
+ await firebase.deleteFileAsync(result.fileName);
 return;
   var savedPlayList=await dynamo.getPlaylistAsync(playlistId);
   var savedPlayListSimp=simplifyPlaylist(savedPlayList);

@@ -10,26 +10,22 @@ admin.initializeApp({
 
 var bucket = admin.storage().bucket();
 
-exports.uploadFileAsync =async function(playlistId){
+exports.deleteFileAsync=async function(filename){
+  await bucket.file(filename).delete();
+}
+
+exports.uploadFileAsync =async function(localFile){
   let uuid = UUID();
-    var filename='./App/vaca.mp3';
-    bucket
-    .upload(filename, {
-        uploadType: "media",
-        metadata: {
-          contentType: 'audio/mpeg',
-          metadata: {
-            firebaseStorageDownloadTokens: uuid
-          }
-        },
-      })
-      .then(f => {
-      var file=f[0];
-       console.log("https://firebasestorage.googleapis.com/v0/b/" + bucket.name + "/o/" + encodeURIComponent(file.name) + "?alt=media&token=" + uuid);
-        
-      })
-      .catch(err => {
-        console.error('ERROR:', err);
-      });
-    // [END storage_upload_file]
+   var uploadResult=await bucket.upload(localFile, {
+       uploadType: "media",
+       metadata: {
+         contentType: 'audio/mpeg',
+         metadata: {
+           firebaseStorageDownloadTokens: uuid
+         }
+       },
+     });
+    var gFile=uploadResult[0];
+    var downloadurl="https://firebasestorage.googleapis.com/v0/b/" + bucket.name + "/o/" + encodeURIComponent(gFile.name) + "?alt=media&token=" + uuid
+    return {downloadurl:downloadurl,fileName:gFile.name};
 }
