@@ -5,12 +5,29 @@ const youtube=require('./youtube.js');
 const dynamo=require('./dynamo.js');
 
 
+function simplifyPlaylist(youtubePlaylist){
+  var playListSimplied=youtubePlaylist.map(item =>{ 
+    return {
+      id:item.snippet.resourceId.videoId,
+      position:item.snippet.position
+    };
+ });
+ return playListSimplied;
+}
+
 (async ()=>{
   var playlistId='PLJLM5RvmYjvxaMig-iCqA9ZrB8_gg6a9g';
-  var result=await youtube.getPlaylistinfoAsync(playlistId);
-  await dynamo.updatePlaylistAsync(playlistId,result.items);
-  var list=await dynamo.getPlaylistAsync(playlistId);
-  console.log(list);
+
+
+  var savedPlayList=await dynamo.getPlaylistAsync(playlistId);
+  var savedPlayListSimp=simplifyPlaylist(savedPlayList);
+
+
+  var currentPlayList=await youtube.getPlaylistinfoAsync(playlistId);
+  var currentPlayListSimp=simplifyPlaylist(currentPlayList.items);
+
+  await dynamo.updatePlaylistAsync(playlistId,currentPlayList.items);
+  console.log(JSON.stringify(currentPlayListSimp));
 })();
 return;
 
