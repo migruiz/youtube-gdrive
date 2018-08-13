@@ -3,3 +3,6 @@
 /node_modules
 package-lock.json
 /App/node_modules
+/App/youtube.js
+/App/client_secret.json
+/App/youtube_credentials.json
