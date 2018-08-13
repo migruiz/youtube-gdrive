@@ -14,6 +14,26 @@ function simplifyPlaylist(youtubePlaylist){
  });
  return playListSimplied;
 }
+function getItemsToDelete(savedItems,currentItems){
+  var currentItemsIds = currentItems.map(a => a.id);
+  var itemsToDelete=[];
+  savedItems.forEach(savedItem => {
+    if (!currentItemsIds.includes(savedItem.id)){
+        itemsToDelete.push(savedItem.id);
+    }
+  });
+  return itemsToDelete;
+}
+function getItemsToDownload(savedItems,currentItems){
+  var savedItemsIds = savedItems.map(a => a.id);
+  var itemsToDownload=[];
+  currentItems.forEach(curretItem => {
+    if (!savedItemsIds.includes(curretItem.id)){
+      itemsToDownload.push(curretItem.id);
+    }
+  });
+  return itemsToDownload;
+}
 
 (async ()=>{
   var playlistId='PLJLM5RvmYjvxaMig-iCqA9ZrB8_gg6a9g';
@@ -25,6 +45,9 @@ function simplifyPlaylist(youtubePlaylist){
 
   var currentPlayList=await youtube.getPlaylistinfoAsync(playlistId);
   var currentPlayListSimp=simplifyPlaylist(currentPlayList.items);
+
+  var itemsToDelete=getItemsToDelete(savedPlayListSimp,currentPlayListSimp);
+  var itemsToDownload=getItemsToDownload(savedPlayListSimp,currentPlayListSimp);
 
   await dynamo.updatePlaylistAsync(playlistId,currentPlayList.items);
   console.log(JSON.stringify(currentPlayListSimp));
