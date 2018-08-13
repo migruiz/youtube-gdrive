@@ -11,7 +11,7 @@ function execyoutubedlAsync(videourl,outputfile){
                 '--audio-quality',
                 '192K',
                 '-o',
-                '%(id)s.%(ext)s',
+                '/downloadedmp3s/%(id)s.%(ext)s',
                 '--restrict-filenames',
                 videourl,
             ]);
@@ -33,5 +33,6 @@ function execyoutubedlAsync(videourl,outputfile){
 exports.downloadVideoAsync=async function(videoId){
     var videourl='https://www.youtube.com/watch?v='+videoId;
     await execyoutubedlAsync(videourl);
-    
+    var downloadedMp3File='/downloadedmp3s/'+videoId+'.mp3';
+    return downloadedMp3File;
 }
