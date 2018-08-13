@@ -2,57 +2,68 @@ const fs = require('fs');
 const readline = require('readline');
 const {google} = require('googleapis');
 const youtube=require('./youtube.js');
+const youtubedl=require('./youtube-dl.js')
 const dynamo=require('./dynamo.js');
 const firebase=require('./firebase.js')
 
 
 function simplifyPlaylist(youtubePlaylist){
-  var playListSimplied=youtubePlaylist.map(item =>{ 
-    return {
-      id:item.snippet.resourceId.videoId,
+
+  var obj={};
+  youtubePlaylist.forEach(item => {
+    obj[item.snippet.resourceId.videoId]={
       position:item.snippet.position
     };
- });
- return playListSimplied;
+  });
+return obj;
 }
 function getItemsToDelete(savedItems,currentItems){
-  var currentItemsIds = currentItems.map(a => a.id);
+  var currentItemsIds = Object.keys(currentItems);
+  var savedItemsIds = Object.keys(savedItems)
   var itemsToDelete=[];
-  savedItems.forEach(savedItem => {
-    if (!currentItemsIds.includes(savedItem.id)){
-        itemsToDelete.push(savedItem.id);
+
+  for (let index = 0; index < savedItemsIds.length; index++) {
+    const savedItemId = savedItemsIds[index];
+    if (!currentItemsIds.includes(savedItemId)){
+      itemsToDelete.push(savedItemId);
     }
-  });
+  }
   return itemsToDelete;
-}
-function getItemsToDownload(savedItems,currentItems){
-  var savedItemsIds = savedItems.map(a => a.id);
-  var itemsToDownload=[];
-  currentItems.forEach(curretItem => {
-    if (!savedItemsIds.includes(curretItem.id)){
-      itemsToDownload.push(curretItem.id);
-    }
-  });
-  return itemsToDownload;
 }
 
 (async ()=>{
   var playlistId='PLJLM5RvmYjvxaMig-iCqA9ZrB8_gg6a9g';
- var result= await firebase.uploadFileAsync('./App/vaca.mp3');
- console.log(result);
- await firebase.deleteFileAsync(result.fileName);
-return;
-  var savedPlayList=await dynamo.getPlaylistAsync(playlistId);
-  var savedPlayListSimp=simplifyPlaylist(savedPlayList);
+  var savedItems=await dynamo.getyoutubePlaylistAsync(playlistId);
 
 
   var currentPlayList=await youtube.getPlaylistinfoAsync(playlistId);
-  var currentPlayListSimp=simplifyPlaylist(currentPlayList.items);
+  var currentItems=simplifyPlaylist(currentPlayList.items);
 
-  var itemsToDelete=getItemsToDelete(savedPlayListSimp,currentPlayListSimp);
-  var itemsToDownload=getItemsToDownload(savedPlayListSimp,currentPlayListSimp);
+  var itemsToDelete=getItemsToDelete(savedItems,currentItems);
+  for (let index = 0; index < itemsToDelete.length; index++) {
+    const itemToDelete = itemsToDelete[index];
+    await firebase.deleteFileAsync(itemToDelete.bucketFileName);
+  }
 
-  await dynamo.updatePlaylistAsync(playlistId,currentPlayList.items);
+  var currentItemsIds = Object.keys(currentItems);
+  for (let index = 0; index < currentItemsIds.length; index++) {
+    const currentItemId=currentItemsIds[index];
+    const currentItem = currentItems[currentItemId];
+    var savedItem=savedItems[currentItemId];
+    if (savedItem){
+      currentItem.url=savedItem.url;
+      currentItem.bucketFileName=savedItem.bucketFileName;
+    }
+    else{
+      var localFile=await youtubedl.downloadVideoAsync(currentItemId);
+      var result= await firebase.uploadFileAsync(localFile);
+      currentItem.url=result.downloadurl;
+      currentItem.bucketFileName=result.fileName;
+    }
+  }
+
+
+  await dynamo.updateyoutubePlaylistAsync(playlistId,currentPlayListSimp);
   console.log(JSON.stringify(currentPlayListSimp));
 })();
 return;

@@ -19,13 +19,13 @@ async function getAsync(params){
 
         docClient.get(params, function(err, data) {
             if (err !== null) return reject(err);
-            resolve(data.Item.items);
+            resolve(data.Item?data.Item.items:{});
         });
     });
 
 }
 
-exports.getPlaylistAsync=async function(playlistId){
+exports.getyoutubePlaylistAsync=async function(playlistId){
     var id='youtubeplaylists/'+playlistId;
     var params = {
         TableName: table,
@@ -36,7 +36,7 @@ exports.getPlaylistAsync=async function(playlistId){
     return await getAsync(params);
 }
 
-exports.updatePlaylistAsync =async function(playlistId,items){
+exports.updateyoutubePlaylistAsync =async function(playlistId,items){
     var id='youtubeplaylists/'+playlistId;
     var params = {
         TableName:table,
