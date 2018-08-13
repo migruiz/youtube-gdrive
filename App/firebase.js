@@ -1,4 +1,5 @@
 var admin = require("firebase-admin");
+const UUID = require("uuid-v4");
 
 var serviceAccount = require("./serviceAccountKey.json");
 
@@ -10,23 +11,21 @@ admin.initializeApp({
 var bucket = admin.storage().bucket();
 
 exports.uploadFileAsync =async function(playlistId){
+  let uuid = UUID();
     var filename='./App/vaca.mp3';
     bucket
     .upload(filename, {
         uploadType: "media",
         metadata: {
-          contentType: 'audio/mpeg'
+          contentType: 'audio/mpeg',
+          metadata: {
+            firebaseStorageDownloadTokens: uuid
+          }
         },
       })
       .then(f => {
-
-        f[0].getSignedUrl({
-            action: 'read',
-            expires: '03-09-2491'
-          }).then(signedUrls => {
-            console.log(JSON.stringify(signedUrls));
-          });
-
+      var file=f[0];
+       console.log("https://firebasestorage.googleapis.com/v0/b/" + bucket.name + "/o/" + encodeURIComponent(file.name) + "?alt=media&token=" + uuid);
         
       })
       .catch(err => {
