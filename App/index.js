@@ -3,6 +3,7 @@ const readline = require('readline');
 const {google} = require('googleapis');
 const youtube=require('./youtube.js');
 const dynamo=require('./dynamo.js');
+const firebase=require('./firebase.js')
 
 
 function simplifyPlaylist(youtubePlaylist){
@@ -37,8 +38,8 @@ function getItemsToDownload(savedItems,currentItems){
 
 (async ()=>{
   var playlistId='PLJLM5RvmYjvxaMig-iCqA9ZrB8_gg6a9g';
-
-
+  await firebase.uploadFileAsync(playlistId);
+return;
   var savedPlayList=await dynamo.getPlaylistAsync(playlistId);
   var savedPlayListSimp=simplifyPlaylist(savedPlayList);
 
