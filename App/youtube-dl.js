@@ -3,7 +3,7 @@ var spawn = require('child_process').spawn;
 
 function execyoutubedlAsync(videourl,outputfile){
     return new Promise(function (resolve, reject) {
-    const youtubedlProcess = spawn(ffmpegFolder+'youtube-dl'
+    const youtubedlProcess = spawn('youtube-dl'
             , [
                 '--extract-audio',
                 '--audio-format',
@@ -17,13 +17,13 @@ function execyoutubedlAsync(videourl,outputfile){
             ]);
 
         var result = '';
-        ffprobe.stdout.on('data', (data) => {
+        youtubedlProcess.stdout.on('data', (data) => {
             result += data.toString();
         });
-        ffprobe.stderr.on('data', (data) => {
+        youtubedlProcess.stderr.on('data', (data) => {
             return reject(err);
         });
-        ffprobe.on('exit', function (code, signal) {
+        youtubedlProcess.on('exit', function (code, signal) {
             resolve();
         });
     });
