@@ -6,3 +6,4 @@ package-lock.json
 /App/youtube.js
 /App/client_secret.json
 /App/youtube_credentials.json
+/App/serviceAccountKey.json
