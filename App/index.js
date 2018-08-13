@@ -25,7 +25,7 @@ function getItemsToDelete(savedItems,currentItems){
   for (let index = 0; index < savedItemsIds.length; index++) {
     const savedItemId = savedItemsIds[index];
     if (!currentItemsIds.includes(savedItemId)){
-      itemsToDelete.push(savedItemId);
+      itemsToDelete.push(savedItems[savedItemId]);
     }
   }
   return itemsToDelete;
@@ -55,7 +55,8 @@ function getItemsToDelete(savedItems,currentItems){
       currentItem.bucketFileName=savedItem.bucketFileName;
     }
     else{
-      var localFile=await youtubedl.downloadVideoAsync(currentItemId);
+      //var localFile=await youtubedl.downloadVideoAsync(currentItemId);
+      var localFile='./App/vaca.mp3';
       var result= await firebase.uploadFileAsync(localFile);
       currentItem.url=result.downloadurl;
       currentItem.bucketFileName=result.fileName;
@@ -63,8 +64,8 @@ function getItemsToDelete(savedItems,currentItems){
   }
 
 
-  await dynamo.updateyoutubePlaylistAsync(playlistId,currentPlayListSimp);
-  console.log(JSON.stringify(currentPlayListSimp));
+  await dynamo.updateyoutubePlaylistAsync(playlistId,currentItems);
+  console.log(JSON.stringify(currentItems));
 })();
 return;
 
