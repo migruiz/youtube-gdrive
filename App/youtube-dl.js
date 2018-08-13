@@ -1,7 +1,8 @@
 var spawn = require('child_process').spawn;
 
 
-function execyoutubedlAsync(videourl,outputfile){
+function execyoutubedlAsync(videourl){
+    console.log(videourl);
     return new Promise(function (resolve, reject) {
     const youtubedlProcess = spawn('youtube-dl'
             , [
