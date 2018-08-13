@@ -16,17 +16,23 @@ function execyoutubedlAsync(videourl,outputfile){
                 videourl,
             ]);
 
-        var result = '';
+        
         youtubedlProcess.stdout.on('data', (data) => {
-            console.log(data);
-            result += data.toString();
+            console.log(data.toString());
         });
+        var error=null;
         youtubedlProcess.stderr.on('data', (data) => {
-            console.log(data);
-            return reject(data);
+            console.error(`child stderr:\n${data}`);
+            error += data.toString();
+            
         });
         youtubedlProcess.on('exit', function (code, signal) {
-            resolve();
+            if (error){
+                return reject(error);    
+            }
+            else{
+                resolve();
+            }
         });
     });
 }
