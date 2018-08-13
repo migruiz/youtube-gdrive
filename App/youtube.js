@@ -3,11 +3,13 @@ var { google } = require('googleapis');
 var OAuth2 = google.auth.OAuth2;
 
 
-(async function(){
+exports.getPlaylistinfoAsync =async function(playlistId){
     var oauth2Client= await getoauthClientAsync()
-    var result= await getPlaylistinfoAsync(oauth2Client,'PLJLM5RvmYjvxaMig-iCqA9ZrB8_gg6a9g');
-    console.log(result);
-})();
+    var result= await getPlaylistinfoAsync(oauth2Client,playlistId);
+    return result;
+}
+
+
 
 
 async function getoauthClientAsync() {

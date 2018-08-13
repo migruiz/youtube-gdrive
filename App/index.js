@@ -1,6 +1,17 @@
 const fs = require('fs');
 const readline = require('readline');
 const {google} = require('googleapis');
+const youtube=require('./youtube.js');
+const dynamo=require('./dynamo.js');
+
+
+(async ()=>{
+  var playlistId='PLJLM5RvmYjvxaMig-iCqA9ZrB8_gg6a9g';
+  var result=await youtube.getPlaylistinfoAsync(playlistId);
+  await dynamo.updatePlaylistAsync(playlistId,result.items);
+  console.log(result);
+})();
+return;
 
 // If modifying these scopes, delete token.json.
 const SCOPES = ['https://www.googleapis.com/auth/drive'];
