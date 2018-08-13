@@ -9,7 +9,8 @@ const dynamo=require('./dynamo.js');
   var playlistId='PLJLM5RvmYjvxaMig-iCqA9ZrB8_gg6a9g';
   var result=await youtube.getPlaylistinfoAsync(playlistId);
   await dynamo.updatePlaylistAsync(playlistId,result.items);
-  console.log(result);
+  var list=await dynamo.getPlaylistAsync(playlistId);
+  console.log(list);
 })();
 return;
 

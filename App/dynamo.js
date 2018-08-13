@@ -14,7 +14,27 @@ async function putAsync(params){
     });
 
 }
+async function getAsync(params){
+    return new Promise(function (resolve, reject) {
 
+        docClient.get(params, function(err, data) {
+            if (err !== null) return reject(err);
+            resolve(data.Item.items);
+        });
+    });
+
+}
+
+exports.getPlaylistAsync=async function(playlistId){
+    var id='youtubeplaylists/'+playlistId;
+    var params = {
+        TableName: table,
+        Key:{
+            "id":id
+        }
+    };
+    return await getAsync(params);
+}
 
 exports.updatePlaylistAsync =async function(playlistId,items){
     var id='youtubeplaylists/'+playlistId;
