@@ -6,7 +6,7 @@ var OAuth2 = google.auth.OAuth2;
 exports.getPlaylistinfoAsync =async function(playlistId){
     var oauth2Client= await getoauthClientAsync()
     var result= await getPlaylistinfoAsync(oauth2Client,playlistId);
-    return simplifyPlaylist(result);
+    return simplifyPlaylist(result.items);
 }
 
 function simplifyPlaylist(youtubePlaylist){
@@ -15,7 +15,8 @@ function simplifyPlaylist(youtubePlaylist){
     youtubePlaylist.forEach(item => {
       var newItem={
         id:item.snippet.resourceId.videoId,
-        position:item.snippet.position
+        position:item.snippet.position,
+        title:item.snippet.title
       }
       items.push(newItem);
     });
