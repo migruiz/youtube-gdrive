@@ -18,4 +18,4 @@ COPY App /App
 VOLUME /googleCredentials
 VOLUME /root/.aws
 
-ENTRYPOINT ["sh"]
+ENTRYPOINT ["node","/App/app.js"]

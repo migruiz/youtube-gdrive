@@ -32,9 +32,9 @@ var syncFx=async ()=>{
   await deleteItems(savedItems, currentItems);
   await updateAndAddNewItems(currentItems, savedItems);
   await dynamo.updateyoutubePlaylistAsync(playlistId,currentItems);
-  console.log(JSON.stringify(currentItems));
+  await syncFx();
 }
-setInterval(function(){ syncFx() }, 30000);
+syncFx();
 
 async function deleteItems(savedItems, currentItems) {
   var itemsToDelete = getItemsToDelete(savedItems, currentItems);
