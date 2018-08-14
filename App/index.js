@@ -35,7 +35,13 @@ function getItemById(items,id){
   console.log(JSON.stringify(currentItems));
 })();
 
-
+async function deleteItems(savedItems, currentItems) {
+  var itemsToDelete = getItemsToDelete(savedItems, currentItems);
+  for (let index = 0; index < itemsToDelete.length; index++) {
+    const itemToDelete = itemsToDelete[index];
+    await firebase.deleteFileAsync(itemToDelete.bucketFileName);
+  }
+}
 
 async function updateAndAddNewItems(currentItems, savedItems) {
   var itemsWithError = await processAndGetItemsWithError();
@@ -48,13 +54,7 @@ async function updateAndAddNewItems(currentItems, savedItems) {
     array.splice(index, 1);
   }
   
-  async function deleteItems(savedItems, currentItems) {
-    var itemsToDelete = getItemsToDelete(savedItems, currentItems);
-    for (let index = 0; index < itemsToDelete.length; index++) {
-      const itemToDelete = itemsToDelete[index];
-      await firebase.deleteFileAsync(itemToDelete.bucketFileName);
-    }
-  }
+
   async function processAndGetItemsWithError() {
     var itemsWithError = [];
     for (let index = 0; index < currentItems.length; index++) {
