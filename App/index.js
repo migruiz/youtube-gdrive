@@ -25,7 +25,7 @@ function getItemById(items,id){
   return null;
 }
 
-(async ()=>{
+var syncFx=async ()=>{
   var playlistId='PLJLM5RvmYjvxaMig-iCqA9ZrB8_gg6a9g';
   var savedItems=await dynamo.getyoutubePlaylistAsync(playlistId);
   var currentItems=await youtube.getPlaylistinfoAsync(playlistId);
@@ -33,7 +33,8 @@ function getItemById(items,id){
   await updateAndAddNewItems(currentItems, savedItems);
   await dynamo.updateyoutubePlaylistAsync(playlistId,currentItems);
   console.log(JSON.stringify(currentItems));
-})();
+}
+setInterval(function(){ syncFx() }, 30000);
 
 async function deleteItems(savedItems, currentItems) {
   var itemsToDelete = getItemsToDelete(savedItems, currentItems);
@@ -49,7 +50,7 @@ async function updateAndAddNewItems(currentItems, savedItems) {
     const itemWithError = itemsWithError[index];
     remove(currentItems,itemWithError);
   }
-  function remove(array, element) {
+  function exitremove(array, element) {
     const index = array.indexOf(element);
     array.splice(index, 1);
   }
