@@ -19,7 +19,7 @@ async function getAsync(params){
 
         docClient.get(params, function(err, data) {
             if (err !== null) return reject(err);
-            resolve(data.Item?data.Item.items:{});
+            resolve(data.Item?data.Item.items:[]);
         });
     });
 
