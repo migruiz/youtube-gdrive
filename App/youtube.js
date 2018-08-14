@@ -42,7 +42,8 @@ async function getPlaylistinfoAsync(oauth2Client,playlistId){
         service.playlistItems.list({
             auth: oauth2Client,
             part: 'snippet',
-            playlistId: playlistId
+            playlistId: playlistId,
+            maxResults:50
         }, function (err, response) {
             if (err !== null) return reject(err);
             resolve(response.data);
