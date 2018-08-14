@@ -7,3 +7,4 @@ docker run -it --rm -v "/home/pi/gdrive:/App/security" -v "/home/pi/files:/App/f
 
 youtube-dl    --extract-audio --audio-format mp3 --audio-quality 192K https://www.youtube.com/watch?v=lDjri2d2X6Q
 
+ docker run -it --rm -v "/home/pi/corecredentials/.aws:/root/.aws" -v "/home/pi/corecredentials/google:/googleCredentials" migruiz/youtube-gdrive
