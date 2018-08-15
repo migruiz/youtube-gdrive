@@ -32,7 +32,10 @@ var syncFx=async ()=>{
   await deleteItems(savedItems, currentItems);
   await updateAndAddNewItems(currentItems, savedItems);
   await dynamo.updateyoutubePlaylistAsync(playlistId,currentItems);
-  await syncFx();
+  setTimeout(async () => {
+    await syncFx();
+  }, 100);
+ 
 }
 syncFx();
 
