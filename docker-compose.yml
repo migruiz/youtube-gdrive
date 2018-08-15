@@ -1,0 +1,39 @@
+version: '2'
+services:
+  youtube-default-sync:
+    image: migruiz/youtube-gdrive
+    container_name: youtube-default-sync
+    environment:
+      PLAYLISTID : 'PLJLM5RvmYjvxaMig-iCqA9ZrB8_gg6a9g'
+    volumes:
+     - /home/pi/corecredentials/.aws:/root/.aws
+     - /home/pi/corecredentials/google:/googleCredentials
+    restart: always
+  youtube-miguel-sync:
+    image: migruiz/youtube-gdrive
+    container_name: youtube-miguel-sync
+    environment:
+      PLAYLISTID : 'PLJLM5RvmYjvwk62Semrl4exYe7p4osOWv'
+    volumes:
+     - /home/pi/corecredentials/.aws:/root/.aws
+     - /home/pi/corecredentials/google:/googleCredentials
+    restart: always
+  youtube-alejandro-sync:
+    image: migruiz/youtube-gdrive
+    container_name: youtube-alejandro-sync
+    environment:
+      PLAYLISTID : 'PLJLM5RvmYjvxxipdtdO7clRjTomBB8ERi'
+    volumes:
+     - /home/pi/corecredentials/.aws:/root/.aws
+     - /home/pi/corecredentials/google:/googleCredentials
+    restart: always
+  youtube-sonia-sync:
+    image: migruiz/youtube-gdrive
+    container_name: youtube-sonia-sync
+    environment:
+      PLAYLISTID : 'PLJLM5RvmYjvzPpigUHNYOcuK8wK8ELCGz'
+    volumes:
+     - /home/pi/corecredentials/.aws:/root/.aws
+     - /home/pi/corecredentials/google:/googleCredentials
+    restart: always
+ 
