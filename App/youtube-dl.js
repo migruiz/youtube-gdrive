@@ -7,10 +7,6 @@ function execyoutubedlAsync(videourl){
     const youtubedlProcess = spawn('youtube-dl'
             , [
                 '--extract-audio',
-                '--audio-format',
-                'mp3',
-                '--audio-quality',
-                '192K',
                 '-o',
                 '/downloadedmp3s/%(id)s.%(ext)s',
                 '--restrict-filenames',
