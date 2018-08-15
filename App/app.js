@@ -53,7 +53,7 @@ async function updateAndAddNewItems(currentItems, savedItems) {
     const itemWithError = itemsWithError[index];
     remove(currentItems,itemWithError);
   }
-  function exitremove(array, element) {
+  function remove(array, element) {
     const index = array.indexOf(element);
     array.splice(index, 1);
   }
