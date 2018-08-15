@@ -8,7 +8,7 @@ function execyoutubedlAsync(videourl){
             , [
                 '--extract-audio',
                 '-o',
-                '/downloadedmp3s/%(id)s.%(ext)s',
+                '/downloadedmp3s/%(id)s.mp3',
                 '--restrict-filenames',
                 videourl,
             ]);
