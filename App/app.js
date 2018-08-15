@@ -26,7 +26,7 @@ function getItemById(items,id){
 }
 
 var syncFx=async ()=>{
-  var playlistId='PLJLM5RvmYjvxaMig-iCqA9ZrB8_gg6a9g';
+  var playlistId=process.env.PLAYLISTID;
   var savedItems=await dynamo.getyoutubePlaylistAsync(playlistId);
   var currentItems=await youtube.getPlaylistinfoAsync(playlistId);
   await deleteItems(savedItems, currentItems);
