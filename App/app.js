@@ -3,7 +3,7 @@ const youtube=require('./youtube.js');
 const youtubedl=require('./youtube-dl.js')
 const dynamo=require('./dynamo.js');
 const firebase=require('./firebase.js')
-
+const dropbox=require('./dropbox')
 
 
 function getItemsToDelete(savedItems,currentItems){
@@ -26,18 +26,41 @@ function getItemById(items,id){
 }
 
 var syncFx=async ()=>{
+
+  process.env.PLAYLISTID='PLJLM5RvmYjvwk62Semrl4exYe7p4osOWv';
   var playlistId=process.env.PLAYLISTID;
   var savedItems=await dynamo.getyoutubePlaylistAsync(playlistId);
   var currentItems=await youtube.getPlaylistinfoAsync(playlistId);
   await deleteItems(savedItems, currentItems);
   await updateAndAddNewItems(currentItems, savedItems);
   await dynamo.updateyoutubePlaylistAsync(playlistId,currentItems);
+  neededToSyncWithDropBox=await syncWithDropbox(currentItems);
+  if (neededToSyncWithDropBox){
+    await dynamo.updateyoutubePlaylistAsync(playlistId,currentItems);
+  }
+
   setTimeout(() => {
     syncFx();
   }, 1000);
  
 }
 syncFx();
+
+
+async function syncWithDropbox(currentItems){
+  var neededToSyncWithDropBox=false;
+  for (let index = 0; index < currentItems.length; index++) {
+    const currentItem = currentItems[index];
+    if (currentItem.hostingAt!=='dropbox'){
+      var dropboxurl=await dropbox.uploadToDropbox(currentItem.bucketFileName,currentItem.url);
+      currentItem.url=dropboxurl;
+      currentItem.hostingAt='dropbox';
+      neededToSyncWithDropBox=true;
+    }
+  }
+  return neededToSyncWithDropBox;
+}
+
 
 async function deleteItems(savedItems, currentItems) {
   var itemsToDelete = getItemsToDelete(savedItems, currentItems);
@@ -67,6 +90,7 @@ async function updateAndAddNewItems(currentItems, savedItems) {
       if (savedItem) {
         currentItem.url = savedItem.url;
         currentItem.bucketFileName = savedItem.bucketFileName;
+        currentItem.hostingAt=savedItem.hostingAt;
       }
       else {
         try {
@@ -74,6 +98,7 @@ async function updateAndAddNewItems(currentItems, savedItems) {
           var result = await firebase.uploadFileAsync(localFile);
           currentItem.url = result.downloadurl;
           currentItem.bucketFileName = result.fileName;
+          currentItem.hostingAt='firebase';
         }
         catch (error) {
           itemsWithError.push(currentItem);
