@@ -28,8 +28,6 @@ function getItemById(items,id){
 
 var previousYoutubePlayListHash;
 var syncFx=async ()=>{
-
-  process.env.PLAYLISTID='PLJLM5RvmYjvwk62Semrl4exYe7p4osOWv';
   var playlistId=process.env.PLAYLISTID;
   var currentItems=await youtube.getPlaylistinfoAsync(playlistId);
   var currentYoutubePlayListHash=hash(currentItems);
