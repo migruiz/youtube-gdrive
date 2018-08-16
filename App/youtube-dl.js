@@ -12,7 +12,7 @@ function execyoutubedlAsync(videourl){
                 '--audio-quality',
                 '192K',
                 '-o',
-                '/downloadedmp3s/%(id)s.%(ext)s',
+                '/downloadedmp3s/'+process.env.PLAYLISTID+'__%(id)s.%(ext)s',
                 '--restrict-filenames',
                 videourl,
             ]);
@@ -42,6 +42,6 @@ function execyoutubedlAsync(videourl){
 exports.downloadVideoAsync=async function(videoId){
     var videourl='https://www.youtube.com/watch?v='+videoId;
     await execyoutubedlAsync(videourl);
-    var downloadedMp3File='/downloadedmp3s/'+videoId+'.mp3';
+    var downloadedMp3File='/downloadedmp3s/'+process.env.PLAYLISTID+'__'+videoId+'.mp3';
     return downloadedMp3File;
 }

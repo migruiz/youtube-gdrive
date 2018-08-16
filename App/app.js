@@ -113,9 +113,8 @@ async function updateAndAddNewItems(currentItems, savedItems) {
       }
       else {
         try {
-          var localFile = await youtubedl.downloadVideoAsync(currentItem.id);
-          var uniqueFileName=process.env.PLAYLISTID+'__'+localFile;
-          var result = await firebase.uploadFileAsync(uniqueFileName);
+          var localFile = await youtubedl.downloadVideoAsync(currentItem.id);          
+          var result = await firebase.uploadFileAsync(localFile);
           currentItem.url = result.downloadurl;
           currentItem.bucketFileName = result.fileName;
           currentItem.hostingAt='firebase';
