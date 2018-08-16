@@ -1,14 +1,5 @@
 version: '2'
 services:
-  youtube-default-sync:
-    image: migruiz/youtube-gdrive
-    container_name: youtube-default-sync
-    environment:
-      PLAYLISTID : 'PLJLM5RvmYjvxaMig-iCqA9ZrB8_gg6a9g'
-    volumes:
-     - /home/pi/corecredentials/.aws:/root/.aws
-     - /home/pi/corecredentials/google:/googleCredentials
-    restart: always
   youtube-miguel-sync:
     image: migruiz/youtube-gdrive
     container_name: youtube-miguel-sync
@@ -17,6 +8,7 @@ services:
     volumes:
      - /home/pi/corecredentials/.aws:/root/.aws
      - /home/pi/corecredentials/google:/googleCredentials
+     - /home/pi/corecredentials/dropbox:/dropboxcredentials
     restart: always
   youtube-alejandro-sync:
     image: migruiz/youtube-gdrive
@@ -26,6 +18,7 @@ services:
     volumes:
      - /home/pi/corecredentials/.aws:/root/.aws
      - /home/pi/corecredentials/google:/googleCredentials
+     - /home/pi/corecredentials/dropbox:/dropboxcredentials
     restart: always
   youtube-sonia-sync:
     image: migruiz/youtube-gdrive
@@ -35,5 +28,6 @@ services:
     volumes:
      - /home/pi/corecredentials/.aws:/root/.aws
      - /home/pi/corecredentials/google:/googleCredentials
+     - /home/pi/corecredentials/dropbox:/dropboxcredentials
     restart: always
  
