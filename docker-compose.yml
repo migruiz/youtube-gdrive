@@ -31,7 +31,7 @@ services:
     image: migruiz/youtube-gdrive
     container_name: youtube-sonia-sync
     environment:
-      PLAYLISTID : 'PLJLM5RvmYjvzPpigUHNYOcuK8wK8ELCGz'
+      PLAYLISTID : 'PLeWM4qlL49K7jPqM5PCM5bpx0ZJYSBlzX'
     volumes:
      - /home/pi/corecredentials/.aws:/root/.aws
      - /home/pi/corecredentials/google:/googleCredentials
