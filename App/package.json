@@ -10,6 +10,7 @@
     "googleapis": "^32.0.0",
     "aws-sdk": "^2.291.0",
     "firebase-admin": "^6.0.0",
-    "uuid-v4": "^0.1.0"
+    "uuid-v4": "^0.1.0",
+    "dropbox-v2-api": "^2.1.17"
   }
 }
