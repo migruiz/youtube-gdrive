@@ -1,7 +1,10 @@
 const dropboxV2Api = require('dropbox-v2-api');
 // create session ref:
 const dropbox = dropboxV2Api.authenticate({
+    token:require('fs').readFileSync('/dropboxcredentials/dropbox.tok')
 });
+
+
 
 
 
@@ -40,8 +43,7 @@ async function deleteAsync(path){
 
 
             if (err !== null) return reject(JSON.stringify(err));
-            var asyncJobId=result.async_job_id;
-            resolve(asyncJobId);
+            resolve(result);
         });
 
 
@@ -117,11 +119,14 @@ async function waitForResultAsync(jobId){
 exports.uploadToDropbox=async function(fileName,url){
 
     var path='/'+fileName;
-    await deleteAsync(path);
 var jobId=await saveUrlAsync(path,url);
 var fileId=await waitForResultAsync(jobId);
 var sharedLink=await createShareLinkAsync(path);
 var dropboxUrl=sharedLink.url;
 var directDownloadLink=dropboxUrl.replace('dl=0','dl=1');
 return directDownloadLink;
+}
+exports.deleteAsync=async function(fileName){
+    var path='/'+fileName;
+    await deleteAsync(path);
 }

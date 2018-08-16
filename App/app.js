@@ -4,6 +4,7 @@ const youtubedl=require('./youtube-dl.js')
 const dynamo=require('./dynamo.js');
 const firebase=require('./firebase.js')
 const dropbox=require('./dropbox')
+const hash=require('object-hash');
 
 
 function getItemsToDelete(savedItems,currentItems){
@@ -25,12 +26,21 @@ function getItemById(items,id){
   return null;
 }
 
+var previousYoutubePlayListHash;
 var syncFx=async ()=>{
 
   process.env.PLAYLISTID='PLJLM5RvmYjvwk62Semrl4exYe7p4osOWv';
   var playlistId=process.env.PLAYLISTID;
-  var savedItems=await dynamo.getyoutubePlaylistAsync(playlistId);
   var currentItems=await youtube.getPlaylistinfoAsync(playlistId);
+  var currentYoutubePlayListHash=hash(currentItems);
+  if (previousYoutubePlayListHash && previousYoutubePlayListHash===currentYoutubePlayListHash){
+    setTimeout(() => {
+      syncFx();
+    }, 1000);
+    return;
+  }
+  previousYoutubePlayListHash=currentYoutubePlayListHash;
+  var savedItems=await dynamo.getyoutubePlaylistAsync(playlistId);
   await deleteItems(savedItems, currentItems);
   await updateAndAddNewItems(currentItems, savedItems);
   await dynamo.updateyoutubePlaylistAsync(playlistId,currentItems);
@@ -66,7 +76,18 @@ async function deleteItems(savedItems, currentItems) {
   var itemsToDelete = getItemsToDelete(savedItems, currentItems);
   for (let index = 0; index < itemsToDelete.length; index++) {
     const itemToDelete = itemsToDelete[index];
-    await firebase.deleteFileAsync(itemToDelete.bucketFileName);
+    try{
+      await firebase.deleteFileAsync(itemToDelete.bucketFileName);
+    }catch(error)
+    {
+      console.log(error);
+    }
+    try{
+      await dropbox.deleteAsync(itemToDelete.bucketFileName);
+    }
+    catch (error) {
+      console.log(error);
+    }
   }
 }
 
@@ -95,7 +116,8 @@ async function updateAndAddNewItems(currentItems, savedItems) {
       else {
         try {
           var localFile = await youtubedl.downloadVideoAsync(currentItem.id);
-          var result = await firebase.uploadFileAsync(localFile);
+          var uniqueFileName=process.env.PLAYLISTID+'__'+localFile;
+          var result = await firebase.uploadFileAsync(uniqueFileName);
           currentItem.url = result.downloadurl;
           currentItem.bucketFileName = result.fileName;
           currentItem.hostingAt='firebase';
