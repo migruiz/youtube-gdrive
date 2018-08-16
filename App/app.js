@@ -120,6 +120,7 @@ async function updateAndAddNewItems(currentItems, savedItems) {
           currentItem.hostingAt='firebase';
         }
         catch (error) {
+          console.log(JSON.stringify(error));
           itemsWithError.push(currentItem);
         }
       }
