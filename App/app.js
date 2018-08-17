@@ -66,7 +66,7 @@ var syncFx=async ()=>{
   removeDeletedItemsFromSavedList(savedItems,itemsToDelete);
 
   updateItemsThatDidNotChange(savedItems,currentItems);
-
+  await syncWithDynamo(savedItems, playlistId);
 
   var newItems=getNewITems(savedItems,currentItems);
   await SyncNewItemsAsync(newItems, savedItems, playlistId);
@@ -96,13 +96,16 @@ async function SyncNewItemsAsync(newItems, savedItems, playlistId) {
 async function SyncNewItemAsync(newItem,savedItems,playlistId){
   await syncNewItem(newItem);
   savedItems.push(newItem);
-  var sortedItems=savedItems.sort(function(obj1, obj2) {
-    return obj1.position - obj2.position;
-  })
-
-  await dynamo.updateyoutubePlaylistAsync(playlistId, sortedItems);
+  await syncWithDynamo(savedItems, playlistId);
 }
 
+
+async function syncWithDynamo(savedItems, playlistId) {
+  var sortedItems = savedItems.sort(function (obj1, obj2) {
+    return obj1.position - obj2.position;
+  });
+  await dynamo.updateyoutubePlaylistAsync(playlistId, sortedItems);
+}
 
 function removeDeletedItemsFromSavedList(savedItems,itemsToDelete){
   itemsToDelete.forEach(itemToDelete => {    
