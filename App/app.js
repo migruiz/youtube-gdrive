@@ -32,7 +32,7 @@ function updateItemsThatDidNotChange(savedItems,currentItems){
   var currentItemsIds = currentItems.map(a => a.id);
   savedItems.forEach(savedItem => {
     if (currentItemsIds.includes(savedItem.id)){
-      var currentItem=getItemById(savedItem.id);
+      var currentItem=getItemById(currentItems,savedItem.id);
       savedItem.position=currentItem.position;
     }
   });
