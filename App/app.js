@@ -62,14 +62,14 @@ var syncFx=async ()=>{
   var savedItems=await dynamo.getyoutubePlaylistAsync(playlistId);
   
   var itemsToDelete = getItemsToDelete(savedItems, currentItems);
-  await deleteItems(itemsToDelete);
+  await deleteItemsAsync(itemsToDelete);
   removeDeletedItemsFromSavedList(savedItems,itemsToDelete);
 
   updateItemsThatDidNotChange(savedItems,currentItems);
 
 
   var newItems=getNewITems(savedItems,currentItems);
-  await SyncNewItems(newItems, savedItems, playlistId);
+  await SyncNewItemsAsync(newItems, savedItems, playlistId);
   
   _previousYoutubePlayListHash=currentYoutubePlayListHash;
   console.log("ended sync");
@@ -81,11 +81,11 @@ var syncFx=async ()=>{
 syncFx();
 
 
-async function SyncNewItems(newItems, savedItems, playlistId) {
+async function SyncNewItemsAsync(newItems, savedItems, playlistId) {
   for (let index = 0; index < newItems.length; index++) {
     var newItem = newItems[index];
     try {
-        SyncNewItem(newItem,savedItems,playlistId);
+        await SyncNewItemAsync(newItem,savedItems,playlistId);
     } catch (error) {
         console.log('Error syncing item');
         console.log(JSON.stringify(error));
@@ -93,7 +93,7 @@ async function SyncNewItems(newItems, savedItems, playlistId) {
   }
 }
 
-function SyncNewItem(newItem,savedItems,playlistId){
+async function SyncNewItemAsync(newItem,savedItems,playlistId){
   await syncNewItem(newItem);
   savedItems.push(newItem);
   var sortedItems=savedItems.sort(function(obj1, obj2) {
@@ -111,7 +111,7 @@ function removeDeletedItemsFromSavedList(savedItems,itemsToDelete){
 }
 
 
-async function deleteItems(itemsToDelete) {
+async function deleteItemsAsync(itemsToDelete) {
   for (let index = 0; index < itemsToDelete.length; index++) {
     var itemToDelete = itemsToDelete[index];
       await dropbox.deleteAsync(itemToDelete.bucketFileName);
