@@ -9,7 +9,7 @@ function execyoutubedlAsync(videourl){
             , [
                 '--extract-audio',
                 '-o',
-                '/downloadedmp3s/'+process.env.PLAYLISTID+'__%(title)__%(id)s.%(ext)s',
+                '/downloadedmp3s/'+process.env.PLAYLISTID+'__%(title)s__%(id)s.%(ext)s',
                 '--restrict-filenames',
                 videourl,
             ]);
@@ -21,6 +21,7 @@ function execyoutubedlAsync(videourl){
             console.log(line);
             if (line.startsWith(outputFileNamePrefix)){
                 outputFileName=line.replace(outputFileNamePrefix,'');
+                outputFileName=outputFileName.replace(/(\r\n\t|\n|\r\t)/gm,"");
             }
         });
         var error=null;
