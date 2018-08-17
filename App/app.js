@@ -58,6 +58,7 @@ var syncFx=async ()=>{
     }, 1000);
     return;
   }
+  console.log("started sync");
   var savedItems=await dynamo.getyoutubePlaylistAsync(playlistId);
   
   var itemsToDelete = getItemsToDelete(savedItems, currentItems);
@@ -71,7 +72,7 @@ var syncFx=async ()=>{
   await SyncNewItems(newItems, savedItems, playlistId);
   
   _previousYoutubePlayListHash=currentYoutubePlayListHash;
-
+  console.log("ended sync");
   setTimeout(() => {
     syncFx();
   }, 1000);
