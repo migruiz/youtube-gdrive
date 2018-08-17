@@ -28,7 +28,15 @@ function getNewITems(savedItems,currentItems){
   });
   return newItems;
 }
-
+function updateItemsThatDidNotChange(savedItems,currentItems){
+  var currentItemsIds = currentItems.map(a => a.id);
+  savedItems.forEach(savedItem => {
+    if (currentItemsIds.includes(savedItem.id)){
+      var currentItem=getItemById(savedItem.id);
+      savedItem.position=currentItem.position;
+    }
+  });
+}
 
 function getItemById(items,id){
   for (let index = 0; index < items.length; index++) {
@@ -55,6 +63,8 @@ var syncFx=async ()=>{
   var itemsToDelete = getItemsToDelete(savedItems, currentItems);
   await deleteItems(itemsToDelete);
   removeDeletedItemsFromSavedList(savedItems,itemsToDelete);
+
+  updateItemsThatDidNotChange(savedItems,currentItems);
 
 
   var newItems=getNewITems(savedItems,currentItems);
@@ -94,6 +104,7 @@ function removeDeletedItemsFromSavedList(savedItems,itemsToDelete){
 
 async function deleteItems(itemsToDelete) {
   for (let index = 0; index < itemsToDelete.length; index++) {
+    var itemToDelete = itemsToDelete[index];
       await dropbox.deleteAsync(itemToDelete.bucketFileName);
   }
 }
