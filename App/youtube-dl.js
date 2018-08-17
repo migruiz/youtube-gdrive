@@ -1,5 +1,6 @@
 var spawn = require('child_process').spawn;
 
+const outputFileNamePrefix="[ffmpeg] Destination: ";
 
 function execyoutubedlAsync(videourl){
     console.log(videourl);
@@ -7,19 +8,20 @@ function execyoutubedlAsync(videourl){
     const youtubedlProcess = spawn('youtube-dl'
             , [
                 '--extract-audio',
-                '--audio-format',
-                'mp3',
-                '--audio-quality',
-                '192K',
                 '-o',
-                '/downloadedmp3s/'+process.env.PLAYLISTID+'__%(id)s.%(ext)s',
+                '/downloadedmp3s/'+process.env.PLAYLISTID+'__%(title)__%(id)s.%(ext)s',
                 '--restrict-filenames',
                 videourl,
             ]);
 
-        
+        var outputFileName;
         youtubedlProcess.stdout.on('data', (data) => {
-            console.log(data.toString());
+            var line=data.toString();
+            
+            console.log(line);
+            if (line.startsWith(outputFileNamePrefix)){
+                outputFileName=line.replace(outputFileNamePrefix,'');
+            }
         });
         var error=null;
         youtubedlProcess.stderr.on('data', (data) => {
@@ -32,7 +34,7 @@ function execyoutubedlAsync(videourl){
                 return reject(error);    
             }
             else{
-                resolve();
+                resolve(outputFileName);
             }
         });
     });
@@ -41,7 +43,6 @@ function execyoutubedlAsync(videourl){
 
 exports.downloadVideoAsync=async function(videoId){
     var videourl='https://www.youtube.com/watch?v='+videoId;
-    await execyoutubedlAsync(videourl);
-    var downloadedMp3File='/downloadedmp3s/'+process.env.PLAYLISTID+'__'+videoId+'.mp3';
+    var downloadedMp3File=await execyoutubedlAsync(videourl);
     return downloadedMp3File;
 }
