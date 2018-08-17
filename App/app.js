@@ -122,7 +122,17 @@ async function deleteItemsAsync(itemsToDelete) {
 }
 
 async function syncNewItem(item){
-  var localFile = await youtubedl.downloadVideoAsync(item.id);          
+  var localFile;
+  try {    
+    localFile= await youtubedl.downloadVideoAsync(item.id);  
+  } catch (error) {
+    if (error.countryRestriction){
+      localFile=await youtubedl.downloadVideoAsync(item.id,'http://piscos.tk:3128');
+    }
+    else{
+      throw error;
+    }
+  }        
   var firebaseResult = await firebase.uploadFileAsync(localFile);
   fs.unlinkSync(localFile);
   var dropboxurl=await dropbox.uploadToDropbox(firebaseResult.fileName,firebaseResult.downloadurl);
