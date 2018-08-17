@@ -75,7 +75,13 @@ async function SyncNewItems(newItems, savedItems, playlistId) {
     var newItem = newItems[index];
     await syncNewItem(newItem);
     savedItems.push(newItem);
-    await dynamo.updateyoutubePlaylistAsync(playlistId, savedItems);
+
+    var sortedItems=savedItems.sort(function(obj1, obj2) {
+      return obj1.position - obj2.position;
+    })
+
+
+    await dynamo.updateyoutubePlaylistAsync(playlistId, sortedItems);
   }
 }
 
