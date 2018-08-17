@@ -18,15 +18,15 @@ function getItemsToDelete(savedItems,currentItems){
   return itemsToDelete;
 }
 
-function getFirstNewItem(savedItems,currentItems){
+function getNewITems(savedItems,currentItems){
   var savedItemsIds = savedItems.map(a => a.id);
   var newItems=[];
   currentItems.forEach(currentItem => {
     if (!savedItemsIds.includes(currentItem.id)){
-      return currentItem;
+      newItems.push(currentItem);
     }
   });
-  return null;
+  return newItems;
 }
 
 
@@ -57,13 +57,8 @@ var syncFx=async ()=>{
   removeDeletedItemsFromSavedList(savedItems,itemsToDelete);
 
 
-  var newItem=getFirstNewItem(savedItems,currentItems);
-  if (newItem){
-    await syncNewItem(newItem);
-    savedItems.push(newItem);
-  }
-  await dynamo.updateyoutubePlaylistAsync(playlistId,savedItems);
-
+  var newItems=getNewITems(savedItems,currentItems);
+  await SyncNewItems(newItems, savedItems, playlistId);
   
   _previousYoutubePlayListHash=currentYoutubePlayListHash;
 
@@ -74,6 +69,15 @@ var syncFx=async ()=>{
 }
 syncFx();
 
+
+async function SyncNewItems(newItems, savedItems, playlistId) {
+  for (let index = 0; index < newItems.length; index++) {
+    var newItem = newItems[index];
+    await syncNewItem(newItem);
+    savedItems.push(newItem);
+    await dynamo.updateyoutubePlaylistAsync(playlistId, savedItems);
+  }
+}
 
 function removeDeletedItemsFromSavedList(savedItems,itemsToDelete){
   itemsToDelete.forEach(itemToDelete => {    
