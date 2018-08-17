@@ -5,7 +5,7 @@ const dynamo=require('./dynamo.js');
 const firebase=require('./firebase.js')
 const dropbox=require('./dropbox')
 const hash=require('object-hash');
-
+var fs = require('fs');
 
 function getItemsToDelete(savedItems,currentItems){
   var currentItemsIds = currentItems.map(a => a.id);
@@ -95,6 +95,7 @@ async function deleteItems(itemsToDelete) {
 async function syncNewItem(item){
   var localFile = await youtubedl.downloadVideoAsync(item.id);          
   var firebaseResult = await firebase.uploadFileAsync(localFile);
+  fs.unlinkSync(localFile);
   var dropboxurl=await dropbox.uploadToDropbox(firebaseResult.fileName,firebaseResult.downloadurl);
   await firebase.deleteFileAsync(firebaseResult.fileName);
   item.url=dropboxurl;
