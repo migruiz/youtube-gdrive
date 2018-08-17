@@ -53,8 +53,8 @@ function execyoutubedlAsync(videourl,proxyurl){
 }
 
 
-exports.downloadVideoAsync=async function(videoId){
+exports.downloadVideoAsync=async function(videoId,proxyurl){
     var videourl='https://www.youtube.com/watch?v='+videoId;
-    var downloadedMp3File=await execyoutubedlAsync(videourl);
+    var downloadedMp3File=await execyoutubedlAsync(videourl,proxyurl);
     return downloadedMp3File;
 }
