@@ -1,33 +1,8 @@
 version: '2'
 services:
-  youtube-miguel-sync:
-    image: migruiz/youtube-gdrive
-    container_name: youtube-miguel-sync
-    environment:
-      PLAYLISTID : 'PLJLM5RvmYjvwk62Semrl4exYe7p4osOWv'
-    volumes:
-     - /home/pi/corecredentials/.aws:/root/.aws
-     - /home/pi/corecredentials/google:/googleCredentials
-     - /home/pi/corecredentials/dropbox:/dropboxcredentials
+  proxy:
+    image: migruiz/youtube-proxy-rpi3
+    container_name: youtube-proxy
     restart: always
-  youtube-alejandro-sync:
-    image: migruiz/youtube-gdrive
-    container_name: youtube-alejandro-sync
-    environment:
-      PLAYLISTID : 'PLJLM5RvmYjvxxipdtdO7clRjTomBB8ERi'
-    volumes:
-     - /home/pi/corecredentials/.aws:/root/.aws
-     - /home/pi/corecredentials/google:/googleCredentials
-     - /home/pi/corecredentials/dropbox:/dropboxcredentials
-    restart: always
-  youtube-sonia-sync:
-    image: migruiz/youtube-gdrive
-    container_name: youtube-sonia-sync
-    environment:
-      PLAYLISTID : 'PLeWM4qlL49K7jPqM5PCM5bpx0ZJYSBlzX'
-    volumes:
-     - /home/pi/corecredentials/.aws:/root/.aws
-     - /home/pi/corecredentials/google:/googleCredentials
-     - /home/pi/corecredentials/dropbox:/dropboxcredentials
-    restart: always
- 
+    ports:
+     - "3128:3128"
