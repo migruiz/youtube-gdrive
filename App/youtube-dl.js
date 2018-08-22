@@ -15,7 +15,7 @@ function execyoutubedlAsync(videourl,proxyurl){
             '/downloadedmp3s/'+process.env.PLAYLISTID+'__%(title)s__%(id)s.%(ext)s',
             '--restrict-filenames'
         ]
-        if (proxyurl){
+        if (true){
             params.push('--proxy');
             params.push(proxyurl);
         }
