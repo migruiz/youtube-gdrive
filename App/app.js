@@ -124,7 +124,7 @@ async function deleteItemsAsync(itemsToDelete) {
 async function syncNewItem(item){
   var localFile;
   try {    
-    localFile= await youtubedl.downloadVideoAsync(item.id,'http://piscos.tk:3128');  
+    localFile= await youtubedl.downloadVideoAsync(item.id);  
   } catch (error) {
     if (error.countryRestriction){
       localFile=await youtubedl.downloadVideoAsync(item.id,'http://piscos.tk:3128');
